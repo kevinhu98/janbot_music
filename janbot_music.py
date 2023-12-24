@@ -14,7 +14,6 @@ client = commands.Bot(command_prefix='.', intents=discord.Intents.all())  # pref
 
 players = {}
 
-
 @client.event  # check if bot is ready
 async def on_ready():
     print('Bot online')
@@ -37,7 +36,15 @@ async def play(ctx, *url):
     YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist': 'True'}
     FFMPEG_OPTIONS = {
         'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
+    #voice = get(client.voice_clients, guild=ctx.guild)
+    
+    # make sure voice is connected , todo: change to join func
+    channel = ctx.message.author.voice.channel
     voice = get(client.voice_clients, guild=ctx.guild)
+    if voice and voice.is_connected():
+        await voice.move_to(channel)
+    else:
+        voice = await channel.connect()
 
     if not voice.is_playing():
         with YoutubeDL(YDL_OPTIONS) as ydl:
