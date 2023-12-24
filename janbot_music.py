@@ -86,10 +86,9 @@ async def pause(ctx):
 @client.command()
 async def stop(ctx):
     voice = get(client.voice_clients, guild=ctx.guild)
-
     if voice.is_playing():
         voice.stop()
-        await ctx.send('Stopping...')
+        await ctx.send('Music stopped')
 
 
 # command to clear channel messages
@@ -97,5 +96,11 @@ async def stop(ctx):
 async def clear(ctx, amount=5):
     await ctx.channel.purge(limit=amount)
     await ctx.send("Messages have been cleared")
+
+@client.command()
+async def leave(ctx):
+    voice = get(client.voice_clients, guild=ctx.guild)
+    await voice.disconnect()
+    await ctx.send("Janbot has been purged")
 
 client.run(os.getenv('TOKEN'))
